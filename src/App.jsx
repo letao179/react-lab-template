@@ -1,42 +1,52 @@
 import { useState } from 'react';
 
 function App() {
-  // State lưu trữ danh sách công việc
   const [tasks, setTasks] = useState([
     { id: 1, name: 'Thiết kế giao diện', priority: 'Cao', completed: false },
     { id: 2, name: 'Viết API đăng nhập', priority: 'Trung bình', completed: true },
   ]);
-  
-  // States cho form thêm mới
   const [taskName, setTaskName] = useState('');
-  const [taskPriority, setTaskPriority] = useState('Thấp');
+  const [taskPriority, setTaskPriority] = useState('Trung bình');
 
-  // TODO 1: Viết hàm thêm công việc mới
+  // TODO 1: Hàm thêm công việc mới
   const handleAddTask = (e) => {
     e.preventDefault();
-    // Bổ sung logic kiểm tra rỗng, tạo object mới và cập nhật mảng tasks
-    // Nhớ reset form sau khi thêm
+    if (taskName.trim() === '') {
+      alert('Vui lòng nhập tên công việc!');
+      return;
+    }
+    const newTask = {
+      id: Date.now(),
+      name: taskName,
+      priority: taskPriority,
+      completed: false
+    };
+    setTasks([...tasks, newTask]);
+    setTaskName('');
+    setTaskPriority('Trung bình');
   };
 
-  // TODO 2: Viết hàm đổi trạng thái hoàn thành của 1 công việc
+  // TODO 2: Hàm đổi trạng thái hoàn thành của 1 công việc
   const handleToggleTask = (id) => {
-    // Tìm task theo id và đảo ngược giá trị completed
+    setTasks(tasks.map(task => 
+      task.id === id ? { ...task, completed: !task.completed } : task
+    ));
   };
 
-  // TODO 3: Viết hàm xóa 1 công việc
+  // TODO 3: Hàm xóa 1 công việc
   const handleDeleteTask = (id) => {
-    // Lọc bỏ task có id tương ứng
+    setTasks(tasks.filter(task => task.id !== id));
   };
 
-  // TODO 4: Viết hàm xóa tất cả các công việc đã hoàn thành
+  // TODO 4: Hàm xóa tất cả các công việc đã hoàn thành
   const clearCompletedTasks = () => {
-    // Lọc và giữ lại những task chưa hoàn thành
+    setTasks(tasks.filter(task => !task.completed));
   };
 
-  // TODO 5: Tính toán các con số thống kê từ mảng tasks hiện tại
-  const totalTasks = 0; // Thay thế bằng logic đếm tổng số task
-  const completedTasks = 0; // Thay thế bằng logic đếm task đã xong
-  const pendingTasks = 0; // Thay thế bằng logic đếm task chưa xong
+  // TODO 5: Tính toán thống kê
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter(task => task.completed).length;
+  const pendingTasks = totalTasks - completedTasks;
 
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto', fontFamily: 'sans-serif' }}>
